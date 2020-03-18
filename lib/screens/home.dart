@@ -103,40 +103,32 @@ class _HomeExtendedState extends State<_HomeExtended> {
             Row(
               children: <Widget>[
                 Expanded(
-                  child: GestureDetector(
-                    child: InkWell(
+                  child: RawMaterialButton(
+                    shape: CircleBorder(),
+                    child: padding(
                       child: Icon(Icons.arrow_back),
                     ),
-                    onTap: deleteCharecter,
+                    onPressed: deleteCharecter,
                     onLongPress: onLongPress,
                   ),
                 ),
                 Expanded(
-                  child: InkWell(
-                    onTap: addingZero,
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 25),
-                        child: Text(
-                          '0',
-                          style: Theme.of(context).textTheme.display1,
-                        ),
+                  child: RawMaterialButton(
+                    shape: CircleBorder(),
+                    onPressed: addingZero,
+                    child: padding(
+                      child: Text(
+                        '0',
+                        style: Theme.of(context).textTheme.display1,
                       ),
                     ),
                   ),
                 ),
                 Expanded(
                   child: IconButton(
-                      icon: Icon(Icons.done),
-                      onPressed: () {
-                        String rollNo = dataController.text.trim();
-                        dataController.clear();
-                        pushData(context, rollNo);
-                      }),
+                    icon: Icon(Icons.done),
+                    onPressed: done,
+                  ),
                 ),
               ],
             )
@@ -158,30 +150,43 @@ class _HomeExtendedState extends State<_HomeExtended> {
 
   Expanded numberRows(List<String> numbers, int i) {
     return Expanded(
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            dataController.value = TextEditingValue(
-              text: '${dataController.value.text + numbers[i]}',
-            );
-          });
+      child: RawMaterialButton(
+        shape: CircleBorder(),
+        onPressed: () {
+          setState(
+            () {
+              dataController.value = TextEditingValue(
+                text: '${dataController.value.text + numbers[i]}',
+              );
+            },
+          );
           HapticFeedback.heavyImpact();
         },
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(top: 20, bottom: 25),
+        child: padding(numbers: numbers, i: i),
+      ),
+    );
+  }
+
+  Padding padding({List<String> numbers, int i, Widget child}) {
+    return child == null
+        ? Padding(
+            padding: const EdgeInsets.all(20.0),
             child: Text(
               '${numbers[i]}',
               style: Theme.of(context).textTheme.display1,
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: child,
+          );
+  }
+
+  void done() {
+    String rollNo = dataController.text.trim();
+    HapticFeedback.heavyImpact();
+    dataController.clear();
+    pushData(context, rollNo);
   }
 
   void addingZero() {
@@ -263,4 +268,5 @@ class _HomeExtendedState extends State<_HomeExtended> {
       ),
     );
   };
+  
 }
